@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import copy as cp
 import cvxpy as cvx
 import scipy as sci
-import mosek
+# import mosek
 
 mosek_params={'MSK_DPAR_ANA_SOL_INFEAS_TOL':1e-6, 
               'MSK_DPAR_INTPNT_CO_TOL_PFEAS':1e-6,
@@ -104,9 +104,9 @@ class eqLQR(object):
         objective = cvx.Minimize(obj_MSSE)
         prob = cvx.Problem(objective, constraints)
 
-        # two options: using mosek or CVXOPT sover, CVXOPT also perform well, but mosek is preferred
-        result = prob.solve(solver=cvx.MOSEK, verbose=False, mosek_params=mosek_params)
-        # result = prob.solve(solver=cvx.CVXOPT)
+        # two solver options: using CVXOPT or mosek
+        result = prob.solve(solver=cvx.CVXOPT)
+        # result = prob.solve(solver=cvx.MOSEK, verbose=False, mosek_params=mosek_params)
 
         self.Qhat = Q.value
         self.Rhat = R.value
@@ -194,9 +194,9 @@ class attacker(object):
 
         prob = cvx.Problem(attack_cost, constraints)
 
-        # two options: using mosek or CVXOPT sover, CVXOPT also perform well, but mosek is preferred
-        prob.solve(solver=cvx.MOSEK, verbose=False, mosek_params=mosek_params)
-        # prob.solve(solver=cvx.CVXOPT)
+        # two solver options: using CVXOPT or mosek
+        prob.solve(solver=cvx.CVXOPT)
+        # prob.solve(solver=cvx.MOSEK, verbose=False, mosek_params=mosek_params)
 
         rs = r.value
         obj = prob.value
